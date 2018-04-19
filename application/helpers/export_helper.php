@@ -1362,6 +1362,8 @@ function quexml_export($surveyi, $quexmllan, $iResponseID = false)
     App()->setLanguage($quexmllang);
 
     $fieldmap = createFieldMap($iSurveyID,'short',false,false,$quexmllang);
+    // Hide or show group headings
+    $aSurveyInfo = getSurveyInfo($iSurveyID,$quexmllang);
 
     $dom = new DOMDocument('1.0','UTF-8');
 
@@ -1450,7 +1452,13 @@ function quexml_export($surveyi, $quexmllan, $iResponseID = false)
             $section->appendChild($sectionInfo);
         }
 
-
+       // Hide or show headings in PDF
+       if ($aSurveyInfo['showgroupinfo'] == 'N' || $aSurveyInfo['showgroupinfo'] == 'X') {
+          $section->setAttribute('hideinfo','true');
+        }
+        if ($aSurveyInfo['showgroupinfo'] == 'D' || $aSurveyInfo['showgroupinfo'] == 'X') {
+          $section->setAttribute('hidetitle','true');
+        }
 
         $section->setAttribute("id", $gid);
 
