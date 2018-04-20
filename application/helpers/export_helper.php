@@ -1441,7 +1441,7 @@ function quexml_export($surveyi, $quexmllan, $iResponseID = false)
 
     $killsession = quexml_start($iSurveyID,$iResponseID,$quexmllang);
 
-    $oSurvey = Survey::model()->findByPk($iSurveyID);
+    $aSurveyInfo = getSurveyInfo($iSurveyID,$quexmllang);
     $fieldmap = createFieldMap($iSurveyID, 'short', false, false, $quexmllang);
 
     $dom = new DOMDocument('1.0', 'UTF-8');
@@ -1531,11 +1531,11 @@ function quexml_export($surveyi, $quexmllan, $iResponseID = false)
 
             $section->setAttribute("id", $gid);
 
-            if ($oSurvey->showgroupinfo == 'N' || $oSurvey->showgroupinfo == 'X') {
-                $section->setAttribute('hideinfo', 'true');
+            if ($aSurveyInfo['showgroupinfo'] == 'N' || $aSurveyInfo['showgroupinfo'] == 'X') {
+                $section->setAttribute('hideinfo','true');
             }
-            if ($oSurvey->showgroupinfo == 'D' || $oSurvey->showgroupinfo == 'X') {
-                $section->setAttribute('hidetitle', 'true');
+            if ($aSurveyInfo['showgroupinfo'] == 'D' || $aSurveyInfo['showgroupinfo'] == 'X') {
+                $section->setAttribute('hidetitle','true');
             }
 
             //boilerplate questions convert to sectionInfo elements
