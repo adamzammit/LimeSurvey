@@ -1328,7 +1328,7 @@ function quexml_set_default_value(&$element, $iResponseID, $qid, $iSurveyID, $fi
  * @param array $RowQ Question details in array
  * @param bool|string $additional Any additional question text to append
  */
-function quexml_create_question($RowQ, $additional = false, $iResponseID = false)
+function quexml_create_question($RowQ, $additional = false, $iResponseID = false, $aSurveyInfo)
 {
     global $dom;
 
@@ -1382,6 +1382,13 @@ function quexml_create_question($RowQ, $additional = false, $iResponseID = false
             $directive->appendChild($administration);
             $question->appendChild($directive);
         }
+    }
+
+    if ($aSurveyInfo['showqnumcode'] == 'N' || $aSurveyInfo['showqnumcode'] == 'X') {
+        $question->setAttribute('hideinfo','true');
+    }
+    if ($aSurveyInfo['showqnumcode'] == 'C' || $aSurveyInfo['showqnumcode'] == 'X') {
+        $question->setAttribute('hidetitle','true');
     }
 
     return $question;
@@ -1581,7 +1588,7 @@ function quexml_export($surveyi, $quexmllan, $iResponseID = false)
                         $SQueryResult = Yii::app()->db->createCommand($Query)->query();
 
                         foreach ($SQueryResult->readAll() as $SRow) {
-                            $question = quexml_create_question($RowQ, $SRow['question'],$iResponseID);
+                            $question = quexml_create_question($RowQ, $SRow['question'],$iResponseID,$aSurveyInfo);
 
                             if ($type == ":") {
                                 //get multiflexible_checkbox - if set then each box is a checkbox (single fixed response)
@@ -1607,7 +1614,7 @@ function quexml_export($surveyi, $quexmllan, $iResponseID = false)
                         $Query = "SELECT value FROM {{question_attributes}} WHERE qid = $qid AND language='$quexmllang' AND attribute='dualscale_headerA'";
                         $QRE = Yii::app()->db->createCommand($Query)->query();
                         $QROW = $QRE->read();
-                        $question = quexml_create_question($RowQ, $QROW['value'],$iResponseID);
+                        $question = quexml_create_question($RowQ, $QROW['value'],$iResponseID,$aSurveyInfo);
 
                         //select subQuestions from answers table where QID
                         quexml_create_subQuestions($question, $qid, $sgq, $iResponseID, $fieldmap, false, true, 0);
@@ -1621,7 +1628,7 @@ function quexml_export($surveyi, $quexmllan, $iResponseID = false)
                         $Query = "SELECT value FROM {{question_attributes}} WHERE qid = $qid AND language='$quexmllang' AND attribute='dualscale_headerB'";
                         $QRE = Yii::app()->db->createCommand($Query)->query();
                         $QROW = $QRE->read();
-                        $question = quexml_create_question($RowQ, $QROW['value'],$iResponseID);
+                        $question = quexml_create_question($RowQ, $QROW['value'],$iResponseID,$aSurveyInfo);
                 
                         //get the header of the second scale of the dual scale question
                         quexml_create_subQuestions($question, $qid, $sgq, $iResponseID, $fieldmap, false, true, 1);
@@ -1632,7 +1639,7 @@ function quexml_export($surveyi, $quexmllan, $iResponseID = false)
                         $section->appendChild($question);
 
                     } else {
-                        $question = quexml_create_question($RowQ,false,$iResponseID);
+                        $question = quexml_create_question($RowQ,false,$iResponseID,$aSurveyInfo);
 
                         $response = $dom->createElement("response");
                         $response->setAttribute("varName", $sgq);
