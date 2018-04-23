@@ -99,6 +99,12 @@ function templatereplace($line, $replacements = array(), &$redata = array(), $de
         $surveyid = $thissurvey['sid'];
     }
 
+    if (isset($surveyid) && isset($_SESSION['survey_'.$surveyid]['srid'])) {
+        $_quexmlpdf=CHtml::link(gT("Save as PDF"),array("/printanswers/view/surveyid/{$surveyid}/printableexport/quexmlpdf"),array('data-toggle'=>'tooltip','data-placement'=>'right','title'=>gT("Note: Print will not include items on this page")));
+    } else {
+        $_quexmlpdf = "";
+    }
+
     // lets sanitize the survey template
     if(isset($thissurvey['templatedir']))
     {
@@ -674,6 +680,7 @@ EOD;
     $coreReplacements['ASSESSMENT_HEADING'] = gT("Your assessment");
     $coreReplacements['CHECKJAVASCRIPT'] = "<noscript role='alert' id='checkjavascript'><p class='alert alert-danger warningjs'>".gT("Caution: JavaScript execution is disabled in your browser. You may not be able to answer all questions in this survey. Please, verify your browser parameters.")."</p></noscript>";
     $coreReplacements['CLEARALL'] = $_clearall;
+    $coreReplacements['QUEXMLPDF'] = $_quexmlpdf;
     $coreReplacements['CLEARALL_LINKS'] = $_clearalllinks;
     $coreReplacements['CLOSEWINDOW'] = ''; // Obsolete tag - keep this line for compatibility reaons
     $coreReplacements['COMPLETED'] = isset($redata['completed']) ? $redata['completed'] : '';    // global

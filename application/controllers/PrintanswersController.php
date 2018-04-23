@@ -73,7 +73,7 @@
 
 
             //Survey is not finished or don't exist
-            if (!isset($_SESSION['survey_'.$iSurveyID]['finished']) || !isset($_SESSION['survey_'.$iSurveyID]['srid']))
+            if (!isset($_SESSION['survey_'.$iSurveyID]['srid']))
             //display "sorry but your session has expired"
             {
                 sendCacheHeaders();
