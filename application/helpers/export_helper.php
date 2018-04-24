@@ -1588,7 +1588,7 @@ function quexml_export($surveyi, $quexmllan, $iResponseID = false)
                         $SQueryResult = Yii::app()->db->createCommand($Query)->query();
 
                         foreach ($SQueryResult->readAll() as $SRow) {
-                            $question = quexml_create_question($RowQ, $SRow['question'],$iResponseID,$aSurveyInfo);
+                            $question = quexml_create_question($RowQ, "&nbsp;(" . $SRow['question'] . ")",$iResponseID,$aSurveyInfo);
 
                             if ($type == ":") {
                                 //get multiflexible_checkbox - if set then each box is a checkbox (single fixed response)
