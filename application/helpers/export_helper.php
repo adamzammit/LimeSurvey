@@ -1384,12 +1384,13 @@ function quexml_create_question($RowQ, $additional = false, $iResponseID = false
         }
     }
 
-    if ($aSurveyInfo['showqnumcode'] == 'N' || $aSurveyInfo['showqnumcode'] == 'X') {
+    // always hide queXML question numbers
+//    if ($aSurveyInfo['showqnumcode'] == 'N' || $aSurveyInfo['showqnumcode'] == 'X') {
         $question->setAttribute('hideinfo','true');
-    }
-    if ($aSurveyInfo['showqnumcode'] == 'C' || $aSurveyInfo['showqnumcode'] == 'X') {
+//    }
+//    if ($aSurveyInfo['showqnumcode'] == 'C' || $aSurveyInfo['showqnumcode'] == 'X') {
         $question->setAttribute('hidetitle','true');
-    }
+//    }
 
     return $question;
 }
