@@ -1478,7 +1478,11 @@ function quexml_export($surveyi, $quexmllan, $iResponseID = false)
     if (!empty($Row['surveyls_welcometext'])) {
         $questionnaireInfo = $dom->createElement("questionnaireInfo");
         $position = $dom->createElement("position", "before");
-        $text = $dom->createElement("text", QueXMLCleanup($Row['surveyls_welcometext']));
+        $welcome = $Row['surveyls_welcometext'];
+        if ($iResponseID !== false) { //add data if this is a response
+            $welcome = LimeExpressionManager::ProcessString($welcome);
+        }
+        $text = $dom->createElement("text", QueXMLCleanup($welcome));
         $administration = $dom->createElement("administration", "self");
         $questionnaireInfo->appendChild($position);
         $questionnaireInfo->appendChild($text);
@@ -1489,7 +1493,11 @@ function quexml_export($surveyi, $quexmllan, $iResponseID = false)
     if (!empty($Row['surveyls_endtext'])) {
         $questionnaireInfo = $dom->createElement("questionnaireInfo");
         $position = $dom->createElement("position", "after");
-        $text = $dom->createElement("text", QueXMLCleanup($Row['surveyls_endtext']));
+        $endtext = $Row['surveyls_endtext'];
+        if ($iResponseID !== false) { //add data if this is a response
+            $endtext = LimeExpressionManager::ProcessString($endtext);
+        }
+        $text = $dom->createElement("text", QueXMLCleanup($endtext));
         $administration = $dom->createElement("administration", "self");
         $questionnaireInfo->appendChild($position);
         $questionnaireInfo->appendChild($text);
@@ -1529,7 +1537,11 @@ function quexml_export($surveyi, $quexmllan, $iResponseID = false)
             if (!empty($Row['description'])) {
                 $sectionInfo = $dom->createElement("sectionInfo");
                 $position = $dom->createElement("position", "before");
-                $text = $dom->createElement("text", QueXMLCleanup($Row['description']));
+                $desc = $Row['description'];
+                if ($iResponseID !== false) { //add data if this is a response
+                     $desc = LimeExpressionManager::ProcessString($desc);
+                }
+                $text = $dom->createElement("text", QueXMLCleanup($desc));
                 $administration = $dom->createElement("administration", "self");
                 $sectionInfo->appendChild($position);
                 $sectionInfo->appendChild($text);
