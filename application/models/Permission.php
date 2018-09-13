@@ -133,7 +133,7 @@ class Permission extends LSActiveRecord
                 'import' => false,
                 'export' => false,
                 'title' => gT("Survey text elements"),
-                'description' => gT("Permission to view/update the survey text elements : survey title, survey description, welcome and end message …"),
+                'description' => gT("Permission to view/update the survey text elements, e.g. survey title, survey description, welcome and end message"),
                 'img'=>'edit'
             ),
             'surveysecurity' => array(
@@ -741,5 +741,32 @@ class Permission extends LSActiveRecord
             return $sEntityName::Model()->findByPk($iEntityID)->owner_id; // ALternative : if owner_id exist in $sEntityName::model()->findByPk($iEntityID), but unsure actually $sEntityName have always a model
         }
         return null;
+    }
+
+    public static function getPermissionList(){
+        return [
+            'assessments' => gT('Assessments'),
+            'quotas' => gT('Quotas'),
+            'responses' => gT('Responses'),
+            'statistics' => gT('Statistics'),
+            'survey' => gT('Survey'),
+            'surveyactivation' => gT('Survey activation'),
+            'surveycontent' => gT('Survey content'),
+            'surveylocale' => gT('Survey locale'),
+            'surveysecurity' => gT('Survey security'),
+            'surveysettings' => gT('Survey settings'),
+            'tokens' => gT('Tokens'),
+            'translations' => gT('Translations')
+        ];
+    }
+    public static function getPermissionGradeList(){
+        return [
+            'create' => gT('Create'),
+            'read' => gT('Read'),
+            'update' => gT('Update'),
+            'delete' => gT('Delete'),
+            'import' => gT('Import'),
+            'export' => gT('Export'),
+        ];
     }
 }

@@ -479,7 +479,7 @@ function return_timer_script($aQuestionAttributes, $ia, $disable = null)
     global $thissurvey;
 
     Yii::app()->getClientScript()->registerScriptFile(Yii::app()->getConfig("generalscripts").'coookies.js', CClientScript::POS_BEGIN);
-    Yii::app()->getClientScript()->registerScriptFile(Yii::app()->getConfig("generalscripts").'timer.js', CClientScript::POS_BEGIN);
+    Yii::app()->getClientScript()->registerPackage('timer-addition');
 
     $langTimer = array(
         'hours'=>gT("hours"),
@@ -743,6 +743,7 @@ function do_boilerplate($ia)
 
     $answer .= doRender('/survey/questions/answer/boilerplate/answer', array(
         'ia'=>$ia,
+        'name'=>$ia[1],
         'basename'=>$ia[1], /* is this needed ? */
         'coreClass'=>'ls-answers hidden',
         ), true);
@@ -1124,7 +1125,7 @@ function do_date($ia)
             'dateformatdetails'      => $dateformatdetails['dateformat'],
             'dateformatdetailsjs'    => $dateformatdetails['jsdate'],
             'dateformatdetailsphp'    => $dateformatdetails['phpdate'],
-            'goodchars'              => "", // "return goodchars(event,'".$goodchars."')", //  This won't work with non-latin keyboards
+            'goodchars'              => "", // "return window.LS.goodchars(event,'".$goodchars."')", //  This won't work with non-latin keyboards
             'checkconditionFunction' => $checkconditionFunction.'(this.value, this.name, this.type)',
             'language'               => App()->language,
             'hidetip'                => trim($aQuestionAttributes['hide_tip']) == 0,
@@ -2120,7 +2121,7 @@ function do_multiplechoice_withcomments($ia)
 /* old system or imported */
         $attributeLabelWidth = null;
     }
-    if (!$attributeInputContainerWidth !== null && !$attributeLabelWidth !== null) {
+    if ($attributeInputContainerWidth === null && $attributeLabelWidth === null) {
         $sInputContainerWidth = 8;
         $sLabelWidth = 4;
     } else {
@@ -3079,8 +3080,8 @@ function do_shortfreetext($ia)
             if (!isset($currentLatLong) || $currentLatLong == false) {
                 $floatLat = 0;
                 $floatLng = 0;
-                $LatLong  = explode(" ", trim($aQuestionAttributes['location_defaultcoordinates']));
-
+                $sDefaultcoordinates=trim(LimeExpressionManager::ProcessString($aQuestionAttributes['location_defaultcoordinates'], $ia[0], array(), 3, 1, false, false, true));/* static var is the last one */
+                $LatLong = explode(" ", $sDefaultcoordinates);
                 if (isset($LatLong[0]) && isset($LatLong[1])) {
                     $floatLat = $LatLong[0];
                     $floatLng = $LatLong[1];
@@ -3125,7 +3126,7 @@ function do_shortfreetext($ia)
             'coreClass'              => $coreClass,
             'freeTextId'             => 'answer'.$ia[1],
             'name'                   => $ia[1],
-            'qid'=>$ia[0],
+            'qid'                    => $ia[0],
             'basename'               => $ia[1],
             'checkconditionFunction' => $checkconditionFunction.'(this.value, this.name, this.type)',
             'value'                  => $_SESSION['survey_'.Yii::app()->getConfig('surveyID')][$ia[1]],
@@ -3145,7 +3146,6 @@ function do_shortfreetext($ia)
         $coreClass       = "ls-answers map-item geoloc-item";
         $currentLocation = $_SESSION['survey_'.Yii::app()->getConfig('surveyID')][$ia[1]];
         $currentCenter   = $currentLatLong = null;
-
         // Get the latitude/longtitude for the point that needs to be displayed by default
         if (strlen($currentLocation) > 2 && strpos($currentLocation, ";")) {
             $currentLatLong = explode(';', $currentLocation);
@@ -3157,7 +3157,8 @@ function do_shortfreetext($ia)
         // If it's not set : set the center to the default position, but don't set the marker
         if (!$currentLatLong) {
             $currentLatLong = array("", "");
-            $currentCenter = explode(" ", trim($aQuestionAttributes['location_defaultcoordinates']));
+            $sDefaultcoordinates=trim(LimeExpressionManager::ProcessString($aQuestionAttributes['location_defaultcoordinates'], $ia[0], array(), 3, 1, false, false, true));/* static var is the last one */
+            $currentCenter = explode(" ", $sDefaultcoordinates);
             if (count($currentCenter) != 2) {
                 $currentCenter = array("", "");
             }
@@ -4647,7 +4648,6 @@ function do_array_texts($ia)
             } else {
                 $radix = 'X'; // to indicate that should not try to change entered values
             }
-            Yii::app()->getClientScript()->registerScriptFile(Yii::app()->getConfig('generalscripts')."array-totalsum.js");
         }
 
         $answer = doRender('/survey/questions/answer/arrays/texts/answer', array(
@@ -5543,9 +5543,10 @@ function do_array_dual($ia)
         $answer = "<p class='error'>".gT("Error: There are no answer options for this question and/or they don't exist in this language.")."</p>\n";
         $inputnames = "";
     }
-    Yii::app()->getClientScript()->registerScriptFile(Yii::app()->getConfig('generalscripts')."dualscale.js", CClientScript::POS_BEGIN);
+    if(!Yii::app()->getClientScript()->isScriptFileRegistered(Yii::app()->getConfig('generalscripts')."dualscale.js", LSYii_ClientScript::POS_BEGIN)) {
+        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->getConfig('generalscripts')."dualscale.js", LSYii_ClientScript::POS_BEGIN);
+    }
     Yii::app()->getClientScript()->registerScript('doDualScaleFunction'.$ia[0], "{$doDualScaleFunction}({$ia[0]});", LSYii_ClientScript::POS_POSTSCRIPT);
-
     return array($answer, $inputnames);
 }
 

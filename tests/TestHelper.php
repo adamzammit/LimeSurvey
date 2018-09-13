@@ -327,7 +327,7 @@ class TestHelper extends TestCase
         $tempFolder = \Yii::app()->getBasePath() .'/../tests/tmp';
         $folder     = $tempFolder.'/screenshots/';
         $screenshot = $webDriver->takeScreenshot();
-        $filename   = $folder . $name . '_' . date('Ymd_His') . '.png';
+        $filename   = $folder . $name . '.png';
         $result     = file_put_contents($filename, $screenshot);
         $this->assertTrue($result > 0, 'Could not write screenshot to file ' . $filename);
     }
@@ -418,6 +418,10 @@ class TestHelper extends TestCase
                 $profile->setPreference('browser.download.manager.closeWhenDone', false);
                 $profile->setPreference('browser.download.manager.showAlertInterval', 100);
                 $profile->setPreference('browser.download.manager.resumeOnWakeDelay', 0);
+
+                // This two lines are necessary to avoid issue https://github.com/SeleniumHQ/docker-selenium/issues/388.
+                $profile->setPreference('browser.tabs.remote.autostart', false);
+                $profile->setPreference('browser.tabs.remote.autostart.2', false);
 
                 $capabilities->setCapability(FirefoxDriver::PROFILE, $profile);
                 $webDriver = LimeSurveyWebDriver::create($host, $capabilities, 5000);

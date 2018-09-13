@@ -80,7 +80,6 @@ class themeoptions  extends Survey_Common_Action
     {
         if (Permission::model()->hasGlobalPermission('templates', 'update')) {
             $model = $this->loadModel($id);
-
             if (isset($_POST['TemplateConfiguration'])) {
                 $model->attributes = $_POST['TemplateConfiguration'];
                 if ($model->save()) {
@@ -117,7 +116,7 @@ class themeoptions  extends Survey_Common_Action
             $this->_updateCommon($model, $sid);
         } else {
             Yii::app()->setFlashMessage(gT("We are sorry but you don't have permissions to do this."), 'error');
-            $this->getController()->redirect(Yii::app()->getController()->createUrl("/admin/themeoptions/sa/updatesurvey", ['surveyid'=>$sid, 'sid'=>$sid]));
+            $this->getController()->redirect(array('admin/survey/sa/view/surveyid/'.$sid));
         }
     }
 
@@ -161,7 +160,7 @@ class themeoptions  extends Survey_Common_Action
         }
 
         $sAdmintheme = sanitize_paranoid_string($sAdminThemeName);
-        setGlobalSetting('admintheme', $sAdmintheme);
+        SettingGlobal::setSetting('admintheme', $sAdmintheme);
         $this->getController()->redirect(Yii::app()->getController()->createUrl("admin/themeoptions#adminthemes"));
     }
 
@@ -172,7 +171,7 @@ class themeoptions  extends Survey_Common_Action
     {
         if (Permission::model()->hasGlobalPermission('templates', 'read')) {
             $aData = array();
-            $aData['oSurveyTheme'] = new TemplateConfiguration();
+            $oSurveyTheme = new TemplateConfiguration();
             $aData['oAdminTheme']  = new AdminTheme();
 
 
@@ -192,9 +191,30 @@ class themeoptions  extends Survey_Common_Action
                 $importErrorMessage = gT("You do not have the required ZIP library installed in PHP.");
             }
 
+            /// FOR GRID View
+            $filterForm = Yii::app()->request->getPost('TemplateConfiguration', false);
+            if ($filterForm) {
+                $oSurveyTheme->setAttributes($filterForm, false);
+                if (array_key_exists('template_description', $filterForm)){
+                    $oSurveyTheme->template_description = $filterForm['template_description'];
+                }
+                if (array_key_exists('template_type', $filterForm)){
+                    $oSurveyTheme->template_type = $filterForm['template_type'];
+                }
+                if (array_key_exists('template_extends', $filterForm)){
+                    $oSurveyTheme->template_extends = $filterForm['template_extends'];
+                }
+            }
+
+            // Page size
+            if (Yii::app()->request->getParam('pageSize')) {
+                Yii::app()->user->setState('pageSizeTemplateView', (int) Yii::app()->request->getParam('pageSize'));
+            }
+
+            $aData['oSurveyTheme'] = $oSurveyTheme;
             $aData['canImport']  = $canImport;
             $aData['importErrorMessage']  = $importErrorMessage;
-
+            $aData['pageSize'] = Yii::app()->user->getState('pageSizeTemplateView', Yii::app()->params['defaultPageSize']); // Page size
 
             $this->_renderWrappedTemplate('themeoptions', 'index', $aData);
         } else {
@@ -242,9 +262,9 @@ class themeoptions  extends Survey_Common_Action
     }
 
 
-    public function importManifest($templatename)
+    public function importManifest()
     {
-        $templatename = sanitize_paranoid_string($templatename);
+        $templatename = Yii::app()->request->getPost('templatename');
         if (Permission::model()->hasGlobalPermission('templates', 'update')) {
             TemplateManifest::importManifest($templatename);
             $this->getController()->redirect(array("admin/themeoptions"));
@@ -269,6 +289,19 @@ class themeoptions  extends Survey_Common_Action
         }
 
         $this->getController()->redirect(array("admin/themeoptions"));
+    }
+
+    public function reset()
+    {
+        $templatename = Yii::app()->request->getPost('templatename');
+        if (Permission::model()->hasGlobalPermission('templates', 'update')) {
+            TemplateConfiguration::uninstall($templatename);
+            TemplateManifest::importManifest($templatename);
+            Yii::app()->setFlashMessage(sprintf(gT("The theme '%s' has been reset."), $templatename), 'success');
+            $this->getController()->redirect(array("admin/themeoptions"));
+        } else {
+            Yii::app()->setFlashMessage(gT("We are sorry but you don't have permissions to do this."), 'error');
+        }
     }
 
     /**
