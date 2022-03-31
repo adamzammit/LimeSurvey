@@ -16,13 +16,13 @@
             'type'        => 'action',
             'action'      => 'delete',
             'url'         =>  App()->createUrl('/admin/menus/sa/massDelete/'),
-            'iconClasses' => 'text-danger fa fa-trash',
+            'iconClasses' => 'fa fa-trash text-danger',
             'text'        =>  gT('Delete'),
             'grid-reload' => 'yes',
 
             // modal
             'actionType'    => 'modal',
-            'modalType'     => 'yes-no',
+            'modalType'     => 'cancel-delete',
             'keepopen'      => 'no',
             'sModalTitle'   => gT('Delete menus'),
             'htmlModalBody' => gT('Are you sure you want to delete the selected menus and all related submenus and entries?'),
@@ -41,7 +41,7 @@
             'grid-reload' => 'yes',
             //modal
             'actionType' => 'modal',
-            'modalType'     => 'yes-no',
+            'modalType'     => 'cancel-apply',
             'keepopen'      => 'yes',
             'yes'           => gT('Apply'),
             'no'            => gT('Cancel'),

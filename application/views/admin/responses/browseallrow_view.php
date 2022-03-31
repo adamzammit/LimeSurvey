@@ -25,7 +25,7 @@ if ($bHasFileUploadQuestion) { ?>
 if (Permission::model()->hasSurveyPermission($surveyid, 'responses', 'delete'))
 { ?>
 <a>
-    <span id='deleteresponse_<?php echo $dtrow['id']; ?>' class="deleteresponse fa fa-trash text-warning" title="<?php eT('Delete this response'); ?>"></span>
+    <span id='deleteresponse_<?php echo $dtrow['id']; ?>' class="deleteresponse fa fa-trash text-danger" title="<?php eT('Delete this response'); ?>"></span>
 </a>
 <?php } ?>
 </td>
@@ -37,7 +37,7 @@ if (Permission::model()->hasSurveyPermission($surveyid, 'responses', 'delete'))
             if (isset($dtrow['tid']) && !empty($dtrow['tid']))
             {
                 //If we have a token, create a link to edit it
-                $browsedatafield .= "<a href='" . $this->createUrl("admin/tokens/sa/edit/surveyid/$surveyid/tokenid/{$dtrow['tid']}/") . "' title='" . gT("Edit this token") . "'>";
+                $browsedatafield .= "<a href='" . $this->createUrl("admin/tokens/sa/edit/surveyid/$surveyid/tokenid/{$dtrow['tid']}/") . "' title='" . gT("Edit this participant") . "'>";
                 $browsedatafield .= "{$dtrow['token']}";
                 $browsedatafield .= "</a>";
             }

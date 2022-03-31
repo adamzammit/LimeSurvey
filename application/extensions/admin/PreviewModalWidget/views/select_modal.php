@@ -27,12 +27,12 @@
                       data-key="<?=$sItemKey?>"
                       data-item-value='<?=json_encode([
                             "key" => $sItemKey,
-                            "title" => htmlentities($aItemContent['description']),
+                            "title" => htmlentities($aItemContent['title']),
                             "itemArray" => $aItemContent
                         ]); ?>' 
                       <?=@$aItemContent['extraAttributes']?>
                     >
-                      <?=$aItemContent['description']?>
+                      <?=$aItemContent['title']?>
                         <?php if (YII_DEBUG) {
                             ?>
                           <em class="small"><?=gT($this->debugKeyCheck)?> <?=$sItemKey?></em>
@@ -61,7 +61,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">
+        <button type="button" class="btn btn-cancel" data-dismiss="modal">
           <?=gT($this->closeButton)?>
         </button>
         <button type="button" id="selector__select-this-<?=$this->widgetsJsName?>" class="btn btn-primary">

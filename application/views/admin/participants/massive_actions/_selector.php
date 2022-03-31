@@ -14,14 +14,14 @@ $this->widget('ext.admin.grid.MassiveActionsWidget.MassiveActionsWidget', array(
                 'type' => 'action',
                 'action' => 'delete',
                 'url' => App()->createUrl('/admin/participants/sa/deleteParticipant/'),
-                'iconClasses' => 'text-danger fa fa-trash',
+                'iconClasses' => 'fa fa-trash text-danger',
                 'text' => gT('Delete'),
                 'grid-reload' => 'yes',
                 'on-success' => "(function(result) { LS.AjaxHelper.onSuccess(result); })",
 
                 // Modal
                 'actionType' => 'modal',
-                'modalType' => 'empty',
+                'modalType' => 'cancel-delete',
                 'keepopen' => 'no',
                 'sModalTitle' => gT('Delete one or more participants...'),
                 'htmlModalBody' =>
@@ -51,7 +51,7 @@ $this->widget('ext.admin.grid.MassiveActionsWidget.MassiveActionsWidget', array(
                 'grid-reload' => 'yes',
                 //modal
                 'actionType' => 'modal',
-                'modalType' => 'yes-no',
+                'modalType' => 'cancel-apply',
                 'keepopen' => 'yes',
                 'yes' => gT('Apply'),
                 'no' => gT('Cancel'),

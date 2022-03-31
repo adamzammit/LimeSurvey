@@ -27,7 +27,7 @@
         {{ checkedState }}
         />
 
-        <label for="SOTH{{ name }}" class="control-label label-radio" id="label-id-{{ name }}">{{ othertext }}</label>
+        <label for="SOTH{{ name }}" class="control-label label-radio" id="label-id-{{ name }}">{{ processString(othertext) }}</label>
     </div>
 
     <!-- comment -->
@@ -37,7 +37,7 @@
         class="form-control {{ kpclass }} input-sm"
         id="answer{{ name }}othertext"
         name="{{ name }}other"
-        title="{{ gT('Other') }}"
+        title="{{ flatString(processString(othertext,1),1) }}"
         {{ answer_other }}
         aria-labelledby="label-id-{{ name }}"
         {% if numbers_only %} data-number="1" {% endif %}

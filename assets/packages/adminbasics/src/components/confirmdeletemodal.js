@@ -3,7 +3,7 @@ const ConfirmDeleteModal = function (options) {
 
     options.fnOnShown = options.fnOnShown || function () {};
     options.fnOnHide = options.fnOnHide || function () {};
-    options.removeOnClose = options.removeOnClose || function () {};
+    options.removeOnClose = options.removeOnClose || true;
     options.fnOnHidden = options.fnOnHidden || function () {};
     options.fnOnLoaded = options.fnOnLoaded || function () {};
 
@@ -18,11 +18,12 @@ const ConfirmDeleteModal = function (options) {
         gridid = options.gridid || $item.data('grid-id') || '',
         buttonNo = options.buttonNo || $item.data('button-no') || '<i class="fa fa-times"></i>',
         buttonYes = options.buttonYes || $item.data('button-yes') || '<i class="fa fa-check"></i>',
+        buttonType = $item.data('button-type') || 'btn-primary',
         parentElement = options.parentElement || $item.data('parent-element') || 'body';
 
     const closeIconHTML = '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>',
-        closeButtonHTML = '<button type="button" class="btn btn-default" data-dismiss="modal">' + buttonNo + '</button>',
-        confirmButtonHTML = '<button type="button" class="btn btn-primary selector--button-confirm">' + buttonYes + '</button>';
+        closeButtonHTML = '<button type="button" class="btn btn-cancel" data-dismiss="modal">' + buttonNo + '</button>',
+        confirmButtonHTML = '<button type="button" class="btn ' + buttonType + ' selector--button-confirm">' + buttonYes + '</button>';
 
 
     //Define all the blocks and combine them by jquery methods
@@ -87,7 +88,7 @@ const ConfirmDeleteModal = function (options) {
 
         },
         runAjaxRequest = function () {
-            return LS.ajax({
+            return LS.AjaxHelper.ajax({
                 url: postUrl,
                 type: 'POST',
                 data: modalObject.find('form').serialize(),
@@ -136,7 +137,7 @@ const ConfirmDeleteModal = function (options) {
             });
             modalObject.on('shown.bs.modal', function () {
                 var self = this;
-                modalObject.find('.selector--button-confirm').on('click', function (e) {
+                modalObject.find('.selector--button-confirm').off('click.confirmdeletesubmit').on('click.confirmdeletesubmit', function (e) {
                     e.preventDefault();
 
                     if (!useAjax) {
@@ -190,6 +191,9 @@ export default function confirmDeletemodal() {
     $(document).off('click.confirmModalSelector', 'a.selector--ConfirmModal');
     $(document).on('click.confirmModalSelector', 'a.selector--ConfirmModal', function (e) {
         e.preventDefault();
+        if ($(this).data('confirm-modal-appended') == 'yes') {
+            return;
+        }
         $(this).confirmModal({});
         $(this).trigger('click.confirmmodal');
     });

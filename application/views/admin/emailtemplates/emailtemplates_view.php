@@ -10,7 +10,6 @@ $count=0;
 // DO NOT REMOVE This is for automated testing to validate we see that page
 echo viewHelper::getViewTestTag('surveyEmailTemplates');
 
-
 App()->getClientScript()->registerScript( "EmailTemplateViews_variables", "
 var sReplaceTextConfirmation='".gT("This will replace the existing text. Continue?","js")."';
 var sKCFinderLanguage='".sTranslateLangCode2CK(App()->language)."';
@@ -18,7 +17,7 @@ var sKCFinderLanguage='".sTranslateLangCode2CK(App()->language)."';
 var LS = LS || {};  // namespace
     LS.lang = LS.lang || {};  // object holding translations
     LS.lang['Remove attachment'] = '".gT("Remove attachment")."';
-    LS.lang['Edit relevance equation'] = '".gT("Edit relevance equation")."';
+    LS.lang['Edit condition'] = '".gT("Edit condition")."';
 ", LSYii_ClientScript::POS_BEGIN );
 
 ?>        
@@ -72,7 +71,7 @@ var LS = LS || {};  // namespace
 </div>
 
 <div class="modal modal-large fade" tabindex="-1" role="dialog" id="kc-modal-open">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -81,6 +80,9 @@ var LS = LS || {};  // namespace
       <div class="modal-body" style="padding: 0;">
         <iframe frameBorder="0" style="min-height: 600px; height:100%; width: 100%;" src="about:blank"></iframe>
       </div>
+        <div class='modal-footer'>
+            <button type="button" class='btn btn-default' data-dismiss='modal'><?php eT("Cancel");?></button>
+        </div>
     </div>
   </div>
 </div>
@@ -90,7 +92,7 @@ var LS = LS || {};  // namespace
         <div class='modal-content'>
             <div class='modal-header'>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
-                <h4 class="modal-title"><?php eT("Relevance equation");?></h4>
+                <h4 class="modal-title"><?php eT("Condition");?></h4>
             </div>
             <div class='modal-body'>
                 <div class='form-group'>

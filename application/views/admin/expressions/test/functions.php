@@ -9,7 +9,7 @@ $aFunctions = ExpressionManager::GetAllowableFunctions();
 <div class="container container-center">
     <div class="row">
         <div class="col-sm-12">
-            <h3>Functions available within Expression Manager</h3>
+            <h3>Functions available within ExpressionScript Engine</h3>
         </div>
     </div>
     <div class="row">
@@ -36,7 +36,7 @@ $aFunctions = ExpressionManager::GetAllowableFunctions();
                                 <?=$aFuncDefinition[3]?>
                             </td>
                             <td>
-                                <?=(!empty($aFuncDefinition[4]) ? '<a href="'.$aFuncDefinition[4].'">'.$aFuncDefinition[4].'</a>' : "&nbsp;")?>
+                                <?=(!empty($aFuncDefinition[4]) ? '<a target="_blank" href="'.$aFuncDefinition[4].'">'.$aFuncDefinition[4].'</a>' : "&nbsp;")?>
                             </td>
                         </tr>
                     <?php } ?> 

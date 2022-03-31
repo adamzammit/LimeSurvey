@@ -24,7 +24,7 @@
 
 <li class="dropdown mega-dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-        <span class="icon-settings" ></span>
+        <span class="fa fa-cogs" ></span>
         <?php eT('Configuration');?>
         <span class="caret"></span>
     </a>
@@ -57,21 +57,21 @@
             <?php endif; ?>
         </li>
 
-        <!-- Expression Manager -->
+        <!-- ExpressionScript Engine -->
         <li class="col-sm-3">
             <?php if(YII_DEBUG):?>
                 <ul>
 
-                    <!-- Expression Manager -->
+                    <!-- ExpressionScript Engine -->
                     <li class="dropdown-header">
                         <span class="icon-expression" ></span>
-                        <?php eT("Expression Manager");?>
+                        <?php eT("Expression Engine");?>
                     </li>
 
-                    <!-- Expression Manager Descriptions -->
+                    <!-- ExpressionScript Engine Descriptions -->
                     <li class="dropdown-item">
                         <a href="<?php echo $this->createUrl("admin/expressions"); ?>">
-                            <?php eT("Expression Manager descriptions");?>
+                            <?php eT("Expression Engine descriptions");?>
                         </a>
                     </li>
 
@@ -92,21 +92,21 @@
                     <!-- Unit Test Dynamic Relevance Processing -->
                     <li class="dropdown-item">
                         <a href="<?php echo $this->createUrl('admin/expressions/sa/relevance'); ?>">
-                            <?php eT("Unit test dynamic relevance processing");?>
+                            <?php eT("Unit test dynamic ExpressionScript processing");?>
                         </a>
                     </li>
 
                     <!-- Preview Conversion of Conditions to Relevance -->
                     <li class="dropdown-item">
                         <a href="<?php echo $this->createUrl('admin/expressions/sa/conditions2relevance'); ?>">
-                            <?php eT("Preview conversion of conditions to relevance");?>
+                            <?php eT("Preview conversion of conditions to ExpressionScript");?>
                         </a>
                     </li>
 
                     <!-- Bulk Convert Conditions to Relevance -->
                     <li class="dropdown-item">
                         <a href="<?php echo $this->createUrl('admin/expressions/sa/upgrade_conditions2relevance'); ?>">
-                            <?php eT("Bulk convert conditions to relevance");?>
+                            <?php eT("Bulk convert conditions to ExpressionScript");?>
                         </a>
                     </li>
 
@@ -140,7 +140,7 @@
                 <?php if(Permission::model()->hasGlobalPermission('templates','read')): ?>
                     <!-- Theme Editor -->
                     <li class="dropdown-item">
-                        <a href="<?php echo $this->createUrl("admin/themeoptions"); ?>">
+                        <a href="<?php echo $this->createUrl("themeOptions/index"); ?>">
                             <?php eT("Themes");?>
                         </a>
                     </li>
@@ -149,17 +149,17 @@
                     <!-- Edit label sets -->
                     <li class="dropdown-item">
                         <a href="<?php echo $this->createUrl("admin/labels/sa/view"); ?>">
-                            <?php eT("Manage label sets");?>
+                            <?php eT("Label sets");?>
                         </a>
                     </li>
                     <?php endif;?>
 
-                <!-- Check Data Integrity -->
+                <!-- Data Integrity -->
                 <?php if(Permission::model()->hasGlobalPermission('superadmin','read')): ?>
 
                     <li class="dropdown-item">
                         <a href="<?php echo $this->createUrl("admin/checkintegrity"); ?>">
-                            <?php eT("Check data integrity");?>
+                            <?php eT("Data integrity");?>
                         </a>
                     </li>
 
@@ -197,26 +197,37 @@
                     <?php eT('Users');?>
                 </li>
 
-                <!-- Manage survey administrators -->
+                <!-- User management -->
                 <?php if(Permission::model()->hasGlobalPermission('users','read')): ?>
                     <li class="dropdown-item">
-                        <a href="<?php echo $this->createUrl("admin/user/sa/index"); ?>">
-                            <?php eT("Manage survey administrators");?>
+                        <a href="<?php echo $this->createUrl("userManagement/index"); ?>">
+                            <?php eT("User management");?>
                         </a>
                     </li>
                     <?php endif;?>
                 <?php if(Permission::model()->hasGlobalPermission('usergroups','read')): ?>
 
-                    <!-- Create/edit user groups -->
+                    <!-- User groups -->
                     <li class="dropdown-item">
-                        <a href="<?php echo $this->createUrl("admin/usergroups/sa/index"); ?>">
-                            <?php eT("Create/edit user groups");?>
+                        <a href="<?php echo $this->createUrl("userGroup/index"); ?>">
+                            <?php eT("User groups");?>
                         </a>
                     </li>
 
-                    <?php endif;?>
+                <?php endif;?>
 
-                <!-- Central participant database -->
+                <?php if(Permission::model()->hasGlobalPermission('superadmin','read')): ?>
+
+                    <!-- User groups -->
+                    <li class="dropdown-item">
+                        <a href="<?php echo $this->createUrl("admin/roles/"); ?>">
+                            <?php eT("User roles");?>
+                        </a>
+                    </li>
+
+                <?php endif;?>
+
+                <!-- Central participant management -->
                 <?php if (Permission::model()->hasGlobalPermission('participantpanel', 'read')
                     || Permission::model()->hasGlobalPermission('participantpanel', 'create')
                     || Permission::model()->hasGlobalPermission('participantpanel', 'update')
@@ -225,7 +236,7 @@
                 ): ?>
                     <li class="dropdown-item">
                         <a href="<?php echo $this->createUrl("admin/participants/sa/displayParticipants"); ?>">
-                            <?php eT("Central participant database"); ?>
+                            <?php eT("Central participant management"); ?>
                         </a>
                     </li>
                     <?php endif;?>
@@ -246,38 +257,40 @@
                 </li>
 
                 <?php if(Permission::model()->hasGlobalPermission('settings','read')): ?>
-                    <!-- Home page settings -->
+                    <!-- Dashboard  -->
                     <li class="dropdown-item">
-                        <a href="<?php echo $this->createUrl("admin/homepagesettings"); ?>">
-                            <?php eT("Home page settings");?>
+                        <a href="<?php echo $this->createUrl("homepageSettings/index"); ?>">
+                            <?php eT("Dashboard");?>
                         </a>
                     </li>
 
-                    <!-- Global settings -->
+                    <!-- Global -->
                     <li class="dropdown-item">
                         <a href="<?php echo $this->createUrl("admin/globalsettings"); ?>">
-                            <?php eT("Global settings");?>
+                            <?php eT("Global");?>
                         </a>
                     </li>
 
+                    <!-- Global Survey -->
                     <li class="dropdown-item">
-                        <a href="<?php echo $this->createUrl("/admin/pluginmanager/sa/index"); ?>">
-                            <?php eT("Plugin manager");?>
+                        <a href="<?php echo $this->createUrl("admin/globalsettings/sa/surveysettings"); ?>">
+                            <?php eT("Global survey");?>
                         </a>
                     </li>
+
+                    <!-- Plugins -->
+                    <li class="dropdown-item">
+                        <a href="<?php echo $this->createUrl("/admin/pluginmanager/sa/index"); ?>">
+                            <?php eT("Plugins");?>
+                        </a>
+                    </li>
+
                 <!-- Surveymenu Editor -->
+                <!-- Survey Menu -->
                 <?php if(Permission::model()->hasGlobalPermission('settings','read')): ?>
                     <li class="dropdown-item">
                         <a href="<?php echo $this->createUrl("admin/menus/sa/view"); ?>">
-                            <?php eT("Menu configuration");?>
-                        </a>
-                    </li>
-                <?php endif;?>
-                <!-- Surveymenu entry Editor -->
-                <?php if(Permission::model()->hasGlobalPermission('settings','read')): ?>
-                    <li class="dropdown-item">
-                        <a href="<?php echo $this->createUrl("admin/menuentries/sa/view"); ?>">
-                            <?php eT("Menu entries configuration");?>
+                            <?php eT("Survey Menu");?>
                         </a>
                     </li>
                 <?php endif;?>
