@@ -568,9 +568,39 @@ class Permission extends LSActiveRecord
             return true;
         }
 
+        $bSuperAdminRole = false;
+
+        /* Find the roles the user is part of and return those permissions */
+        /* roles are only for global permission */
+        // @TODO add surveypermission to roles
+        if ($sEntityName == 'global') {
+            $aRoles = self::getUserRole($iUserID);
+            if (safecount($aRoles) > 0) {
+                $allowed = false;
+                foreach ($aRoles as $role) {
+                    if (
+                        $role === "superadmin"
+                        && $this->roleHasPermission($role['ptid'], 'superadmin', 'read')
+                    ) {
+                        $bSuperAdminRole = true;
+                        break;
+                    }
+                    $allowed = $allowed || $this->roleHasPermission($role['ptid'], $sPermission, substr($sCRUD, 0, -2));
+                }
+                /* Can return false ? Even if user have the specific right … */
+                if (!$bSuperAdminRole) {
+                    return $allowed;
+                }
+            }
+        }
+
         /* Check if superadmin and static it */
         if (!isset($aPermissionStatic[0]['global'][$iUserID]['superadmin']['read_p'])) {
-            $aPermission = $this->findByAttributes(array("entity_id" => 0, 'entity' => 'global', "uid" => $iUserID, "permission" => 'superadmin'));
+            if ($bSuperAdminRole) {
+                $aPermission = ['read_p' => true];
+            } else {
+                $aPermission = $this->findByAttributes(array("entity_id" => 0, 'entity' => 'global', "uid" => $iUserID, "permission" => 'superadmin'));
+            }
             $bPermission = is_null($aPermission) ? array() : $aPermission->attributes;
             $aPermissionStatic[0]['global'][$iUserID]['superadmin'] = array_merge(
                 array(
@@ -590,21 +620,6 @@ class Permission extends LSActiveRecord
         }
         if (self::isForcedSuperAdmin($iUserID) || $aPermissionStatic[0]['global'][$iUserID]['superadmin']['read_p']) {
             return true;
-        }
-
-        /* Find the roles the user is part of and return those permissions */
-        /* roles are only for global permission */
-        // @TODO add surveypermission to roles
-        if ($sEntityName == 'global') {
-            $aRoles = self::getUserRole($iUserID);
-            if (safecount($aRoles) > 0) {
-                $allowed = false;
-                foreach ($aRoles as $role) {
-                    $allowed = $allowed || $this->roleHasPermission($role['ptid'], $sPermission, substr($sCRUD, 0, -2));
-                }
-                /* Can return false ? Even if user have the specific right … */
-                return $allowed;
-            }
         }
 
         /* Check in permission DB and static it */
